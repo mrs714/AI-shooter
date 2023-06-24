@@ -27,7 +27,7 @@ public class HumanoidLandController : MonoBehaviour
 
     private Vector3 GetMoveInput()
     {
-        print("HumanoidLandController GetMoveInput:" + _input.MoveInput.x + "," + _input.MoveInput.y);
+        //print("HumanoidLandController GetMoveInput:" + _input.MoveInput.x + "," + _input.MoveInput.y);
         return new Vector3(_input.MoveInput.x, 0.0f, _input.MoveInput.y);
     }
 

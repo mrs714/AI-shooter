@@ -122,7 +122,6 @@
 -define:ENABLE_TILEMAP
 -define:ENABLE_TIMELINE
 -define:ENABLE_INPUT_SYSTEM
--define:ENABLE_LEGACY_INPUT_MANAGER
 -define:CSHARP_7_OR_LATER
 -define:CSHARP_7_3_OR_NEWER
 -r:"C:/Program Files/2022.1.23f1/Editor/Data/Managed/UnityEngine/UnityEditor.CoreModule.dll"
@@ -361,8 +360,13 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Scripts/Controllers/HumanoidLandController.cs"
+"Assets/Scripts/Controllers/NeuralNetwork.cs"
+"Assets/Scripts/Controllers/PlayerController.cs"
 "Assets/Scripts/Input/HumanoidLandInput.cs"
 "Assets/Scripts/Input/InputActions.cs"
+"Assets/Scripts/SpawnerManager/EnemyController.cs"
+"Assets/Scripts/SpawnerManager/Manager.cs"
+"Assets/TODO.cs"
 -langversion:9.0
 
 /deterministic
