@@ -37,13 +37,13 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Input\HumanoidLandInput.cs" />
-     <Compile Include="Assets\Scripts\SpawnerManager\EnemyController.cs" />
-     <Compile Include="Assets\Scripts\Input\InputActions.cs" />
-     <Compile Include="Assets\Scripts\Controllers\HumanoidLandController.cs" />
-     <Compile Include="Assets\Scripts\SpawnerManager\Manager.cs" />
-     <Compile Include="Assets\Scripts\Controllers\PlayerController.cs" />
-     <Compile Include="Assets\Scripts\Controllers\NeuralNetwork.cs" />
      <Compile Include="Assets\TODO.cs" />
+     <Compile Include="Assets\Scripts\ObjectScripts\EnemyController.cs" />
+     <Compile Include="Assets\Scripts\Input\InputActions.cs" />
+     <Compile Include="Assets\Scripts\SpawnerManager\Manager.cs" />
+     <Compile Include="Assets\Scripts\ObjectScripts\GoalController.cs" />
+     <Compile Include="Assets\Scripts\ObjectScripts\PlayerController.cs" />
+     <Compile Include="Assets\Scripts\NeuralNetwork\NeuralNetwork.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\2022.1.23f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

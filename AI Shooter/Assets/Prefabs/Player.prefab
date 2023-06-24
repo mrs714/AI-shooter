@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5429319272287499627}
   m_Layer: 0
   m_Name: PlayerBody
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 5429319272996313970}
   m_Layer: 0
   m_Name: Red
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -161,6 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 500
+  points: 0
 --- !u!1 &5429319273047096356
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,7 +205,7 @@ GameObject:
   - component: {fileID: 5429319273199904011}
   m_Layer: 0
   m_Name: Humanoid
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

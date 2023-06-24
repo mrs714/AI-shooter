@@ -506,7 +506,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfEnemies: 10
   numberOfObjectives: 3
-  numberOfZonesPerSide: 10
+  numberOfZonesPerSide: 1
   startingX: -250
   startingY: -250
   zoneSize: 50

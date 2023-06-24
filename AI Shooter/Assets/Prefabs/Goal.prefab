@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3013636886534666438}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Reward
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -123,6 +123,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5098514276597528310}
+  - component: {fileID: 7788747521260375106}
   m_Layer: 0
   m_Name: Goal
   m_TagString: Reward
@@ -144,5 +145,17 @@ Transform:
   m_Children:
   - {fileID: 8747068088352993289}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7788747521260375106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7996498115724900815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bac1d5a1d23ec5d40b797eb5cccf0322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

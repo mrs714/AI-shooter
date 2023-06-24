@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8082355837380105640}
-  - component: {fileID: 7230886670191296004}
+  - component: {fileID: -496424065048873809}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -33,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7230886670191296004
+--- !u!114 &-496424065048873809
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
