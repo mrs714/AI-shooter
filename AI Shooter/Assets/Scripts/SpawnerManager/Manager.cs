@@ -4,20 +4,23 @@ using UnityEngine;
 
 public class Manager : MonoBehaviour
 {
-        // Start is called before the first frame update
-
+    // Private variables, available in the inspector
     [SerializeField] int numberOfEnemies = 10;
     [SerializeField] int numberOfObjectives = 10;
     [SerializeField] int numberOfZonesPerSide = 3;
     [SerializeField] int startingX = -100;
     [SerializeField] int startingY = -100;
     [SerializeField] int zoneSize = 30;
+    [SerializeField] int typeOfTraining = 0; // 0 = runner, 1 = shooter, 2 = both
+    [SerializeField] float secondsPerGeneration = 15f;
+
+    // Prefabs to be set in the inspector
     public GameObject enemyPrefab;
     public GameObject objectivePrefab;
     public GameObject playerPrefab;
     public GameObject wallPrefab;
 
-    //list of players, enemies, walls, objectives, and nn
+    // List of players, enemies, walls, objectives, and nn
     List<GameObject> players = new List<GameObject>();
     List<GameObject> enemies = new List<GameObject>();
     List<GameObject> walls = new List<GameObject>();
@@ -26,83 +29,120 @@ public class Manager : MonoBehaviour
     //list that contains a list of all the objects of each zone, listed by type, which will be provided to the players
     List<List<List<GameObject>>> zoneObjects = new List<List<List<GameObject>>>(); //first, we have the zones, then the type of object, then the objects themselves: enemies, objectives
   
-
-    //timer, counter
+    // Additional variables - info
     float timer = 0f;
     int generation = 0;
-    int maxAwardedScore = 0;
+    int maxAwardedScore = int.MinValue;
 
 
     void Start()
     {
-        //the first time, we spawn with blank nn
-
-        //first, we get the parameters
-        int neuronsOnFirstLayer = (2 * objectives.Count) + (2 * enemies.Count) + 2; //2 for the position of the player
-
-        //then, we create the neural networks
-        neuralNetworks = new NeuralNetwork[numberOfZonesPerSide * numberOfZonesPerSide];
-        for (int i = 0; i < neuralNetworks.Length; i++)
+        // We start with a blank (random) neural network
+        // We can select the type of training we want to do
+        // 0 = runner, 1 = shooter, 2 = both
+        if (typeOfTraining == 0)
         {
-            neuralNetworks[i] = new NeuralNetwork(neuronsOnFirstLayer,2,5,10);
+            neuralNetworks = createNeuralNetworksRunner();
+            spawnRunners(neuralNetworks);
         }
-
-        spawn(neuralNetworks);
-
-        //once everything is setup, we can wait and then get the best players, mutate their neural network and spawn them again
-    }
-
-    // Selects the best players, and copies their neural network to the list of neural networks
-
-    void getBestPlayers(){
-        //searches for the player with the highest score
-        int maxScore = 0;
-        int maxScoreIndex = 0;
-        //lenght of the player list
-        for (int i = 0; i < players.Count; i++)
+        else if (typeOfTraining == 1)
         {
-            if (players[i].GetComponentInChildren<PlayerController>().points > maxScore)
-            {
-                maxScore = players[i].GetComponentInChildren<PlayerController>().points;
-                maxScoreIndex = i;
-            }
+            neuralNetworks = createNeuralNetworksShooter();
+            spawnShooters(neuralNetworks);
         }
-        maxAwardedScore = maxScore; 
-        //once we have the best player, we copy its neural network to the list of neural networks
-        for (int i = 0; i < neuralNetworks.Length; i++)
+        else if (typeOfTraining == 2)
         {
-            neuralNetworks[i] = players[maxScoreIndex].GetComponentInChildren<PlayerController>()._neuralNetwork;
+            neuralNetworks = createNeuralNetworksBoth();
+            spawnBoth(neuralNetworks);
         }
-        
-
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Check if enough time has passed since the last generation
         timer += Time.deltaTime;
-        if (timer > 15f)
+        if (timer > secondsPerGeneration)
         {
-            //get the best x players players
-            getBestPlayers();
+            // Take the best players and mutate their NN
+            evolve();
 
-            //delete all the objects in the scene
+            // Delete all the objects in the scene
             deleteObjects();
             
-            //mutate the neural networks
-            for (int i = 0; i < neuralNetworks.Length; i++)
+            // Respawn them
+            if (typeOfTraining == 0)
             {
-                neuralNetworks[i].Mutate();
+                spawnRunners(neuralNetworks);
+            }
+            else if (typeOfTraining == 1)
+            {
+                spawnShooters(neuralNetworks);
+            }
+            else if (typeOfTraining == 2)
+            {
+                spawnBoth(neuralNetworks);
             }
 
-            //spawn them
-            spawn(neuralNetworks);
-            //reset timer
+            // Reset timer
             timer = 0f;
 
             //print info generation
             generation++;
             Debug.Log("Generation: " + generation + ". Max Score: " + maxAwardedScore);
+        }
+    }
+
+    // Creates the neural networks for the runner players
+    NeuralNetwork[] createNeuralNetworksRunner()
+    {
+        // First, the ammount of parameters is calculated
+        int neuronsOnFirstLayer = 6; //2 for the position of the player, 2 for the position of the objective, 2 for the position of the enemy
+
+        // Then, we create the neural networks
+        NeuralNetwork[] neuralNetworks = new NeuralNetwork[numberOfZonesPerSide * numberOfZonesPerSide];
+        for (int i = 0; i < neuralNetworks.Length; i++)
+        {
+            neuralNetworks[i] = new NeuralNetwork(neuronsOnFirstLayer,2,5,10);
+        }
+
+        return neuralNetworks;
+    }
+
+    // Creates the neural networks for the shooter players
+    NeuralNetwork[] createNeuralNetworksShooter()
+    {
+        return null;
+    }
+
+    // Creates the neural networks for the shooter and runner players
+    NeuralNetwork[] createNeuralNetworksBoth()
+    {
+        return null;
+    }
+
+    // Selects the best players, and copies their neural network to the list of neural networks
+    void evolve(){
+        // Searches the players with the best score, copies their neural networks, and evolves them
+        
+        // Sorts the players by score
+        players.Sort((x, y) => x.GetComponentInChildren<PlayerController>().points.CompareTo(y.GetComponentInChildren<PlayerController>().points));
+
+        // If there are n*n scenarios, each one with one player, we select the best n players to copy their neural network n times
+        for (int i = 0; i < numberOfZonesPerSide; i++)
+        {
+            for (int j = 0; j < numberOfZonesPerSide; j++)
+            {
+                // Copies the neural network of the best player to the list of neural networks
+                int index = (i * numberOfZonesPerSide) + j;
+                neuralNetworks[index] = players[players.Count - 1 - index].GetComponentInChildren<PlayerController>()._neuralNetwork;
+            }
+        }
+
+        // Then, we can mutate the neural networks
+        for (int i = 0; i < neuralNetworks.Length; i++)
+        {
+            neuralNetworks[i].Mutate();
         }
     }
 
@@ -137,7 +177,7 @@ public class Manager : MonoBehaviour
         zoneObjects = new List<List<List<GameObject>>>();
     }
 
-    void spawn(NeuralNetwork[] neuralNetworks){
+    void spawnRunners(NeuralNetwork[] neuralNetworks){
         // calculate starting point of each zone with 2 loops:
         for (int i = 0; i < numberOfZonesPerSide; i++)
         {
@@ -229,5 +269,15 @@ public class Manager : MonoBehaviour
                 playerObject.GetComponentInChildren<PlayerController>().zoneObjects = zoneObjects[(i * numberOfZonesPerSide) + j];
             }
         }
+    }
+
+    void spawnShooters(NeuralNetwork[] neuralNetworks)
+    {
+        
+    }
+
+    void spawnBoth(NeuralNetwork[] neuralNetworks)
+    {
+        
     }
 }
