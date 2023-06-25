@@ -127,6 +127,7 @@ public class Manager : MonoBehaviour
         
         // Sorts the players by score
         players.Sort((x, y) => x.GetComponentInChildren<PlayerController>().points.CompareTo(y.GetComponentInChildren<PlayerController>().points));
+        maxAwardedScore = players[players.Count - 1].GetComponentInChildren<PlayerController>().points;
 
         // If there are n*n scenarios, each one with one player, we select the best n players to copy their neural network n times
         for (int i = 0; i < numberOfZonesPerSide; i++)
