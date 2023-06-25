@@ -2,3 +2,6 @@ AI Shooter/Temp/
 AI Shooter/Library/
 AI Shooter/Logs/
 *.log
+Temp/
+Library/
+Logs/
