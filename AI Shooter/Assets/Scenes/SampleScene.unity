@@ -405,7 +405,7 @@ Transform:
   m_GameObject: {fileID: 1658281288}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -2, z: 0}
-  m_LocalScale: {x: 50, y: 50, z: 50}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 736345319}
@@ -506,10 +506,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfEnemies: 10
   numberOfObjectives: 3
-  numberOfZonesPerSide: 1
-  startingX: -250
-  startingY: -250
+  numberOfZonesPerSide: 20
+  startingX: -500
+  startingY: -500
   zoneSize: 50
+  typeOfTraining: -1
+  secondsPerGeneration: 4
   enemyPrefab: {fileID: 685141118506697609, guid: fb8e0e5d1378c86438d63dd30ade92e4, type: 3}
   objectivePrefab: {fileID: 7996498115724900815, guid: b389e503128c6cf4fae3aa2b73b25e43, type: 3}
   playerPrefab: {fileID: 5429319273047096356, guid: b9234fd58f964c444ad93d4a21be93d9, type: 3}

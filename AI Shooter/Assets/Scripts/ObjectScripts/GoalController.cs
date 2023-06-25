@@ -5,13 +5,13 @@ using UnityEngine;
 public class GoalController : MonoBehaviour
 {
     //handles collision with the player
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "Untagged")
+        if (other.gameObject.tag == "Player")
         {
             //destroy goal
-            Destroy(this.gameObject);
-            print("Goal reached");
+            Destroy(gameObject);
+            
         }
     }
 }

@@ -97,9 +97,11 @@ public class NeuralNetwork
                 for (int k = 0; k < layers[i].neurons[j].weights.Length; k++) {
                     // Mutate the weight:
                     layers[i].neurons[j].weights[k] += Random.Range(-0.1f, 0.1f);
+                    layers[i].neurons[j].weights[k] = Mathf.Clamp(layers[i].neurons[j].weights[k], -1, 1);
                 }
                 // And the bias:
                 layers[i].neurons[j].bias += Random.Range(-0.1f, 0.1f);
+                layers[i].neurons[j].bias = Mathf.Clamp(layers[i].neurons[j].bias, -1, 1);
             }
         }
     }
@@ -124,6 +126,8 @@ public class NeuralNetwork
                 {
                     layers[i].neurons[j].value += Mathf.Clamp((neuron.value * neuron.weights[j]) + neuron.bias, -1, 1) ;
                 }
+                // We apply the activation function:
+                layers[i].neurons[j].value = Sigmoid(layers[i].neurons[j].value);
             }
         }
 
@@ -135,4 +139,9 @@ public class NeuralNetwork
 
         return  outputs;
     }
+
+    // Activation function: sigmoid
+    float Sigmoid(float x) {
+        return 2 / (1 + Mathf.Exp(-x)) - 0.5f;
+    } 
 }
