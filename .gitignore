@@ -1,8 +1,4 @@
-Temp/
-Library/
-Logs/
+AI Shooter/Temp/
+AI Shooter/Library/
+AI Shooter/Logs/
 *.log
-AI Shooter/Library/SourceAssetDB
-AI Shooter/Logs/AssetImportWorker0.log
-AI Shooter/Logs/AssetImportWorker1.log
-AI Shooter/Logs/shadercompiler-AssetImportWorker0.log
