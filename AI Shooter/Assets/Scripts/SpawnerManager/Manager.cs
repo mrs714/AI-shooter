@@ -160,14 +160,16 @@ public class Manager : MonoBehaviour
         // If there are n*n scenarios, each one with one player, we select the best n players to copy their neural network n times
         // We copy only the best one
         for (int i = 0; i < numberOfZonesPerSide; i++)
-        {   
-            neuralNetworks[i] = players[players.Count - 1].GetComponentInChildren<PlayerController>()._neuralNetwork;            
-            /*for (int j = 0; j < numberOfZonesPerSide; j++)
+        {    
+            for (int j = 0; j < numberOfZonesPerSide; j++)
             {
-                // Copies the neural network of the best player to the list of neural networks
+                
+                neuralNetworks[i] = new NeuralNetwork(players[players.Count - 1].GetComponentInChildren<PlayerController>()._neuralNetwork);           
+                /* Copies the neural network of the best player to the list of neural networks
                 int index = (i * numberOfZonesPerSide) + j;
                 neuralNetworks[index] = players[players.Count - 1 - index].GetComponentInChildren<PlayerController>()._neuralNetwork;
-            }*/
+                */
+            }
         }
 
         // Draw the neural network of the best player

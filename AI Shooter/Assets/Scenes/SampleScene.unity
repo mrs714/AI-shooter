@@ -511,7 +511,8 @@ MonoBehaviour:
   startingY: -500
   zoneSize: 50
   typeOfTraining: -1
-  secondsPerGeneration: 8
+  secondsPerGeneration: 5
+  mutationValue: 0
   enemyPrefab: {fileID: 685141118506697609, guid: fb8e0e5d1378c86438d63dd30ade92e4, type: 3}
   objectivePrefab: {fileID: 7996498115724900815, guid: b389e503128c6cf4fae3aa2b73b25e43, type: 3}
   playerPrefab: {fileID: 5429319273047096356, guid: b9234fd58f964c444ad93d4a21be93d9, type: 3}
