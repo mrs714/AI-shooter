@@ -504,14 +504,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60ab83a4909b85e448c4f59542da666c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfEnemies: 10
+  numberOfEnemies: 23
   numberOfObjectives: 3
   numberOfZonesPerSide: 20
   startingX: -500
   startingY: -500
   zoneSize: 50
   typeOfTraining: -1
-  secondsPerGeneration: 4
+  secondsPerGeneration: 8
   enemyPrefab: {fileID: 685141118506697609, guid: fb8e0e5d1378c86438d63dd30ade92e4, type: 3}
   objectivePrefab: {fileID: 7996498115724900815, guid: b389e503128c6cf4fae3aa2b73b25e43, type: 3}
   playerPrefab: {fileID: 5429319273047096356, guid: b9234fd58f964c444ad93d4a21be93d9, type: 3}

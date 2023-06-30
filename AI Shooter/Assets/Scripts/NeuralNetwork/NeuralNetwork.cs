@@ -28,21 +28,56 @@ public class NeuralNetwork
     int lastLayerNumber;
     int hiddenLayersNumber;
     int neuronsPerLayer;
+    float mutationValue;
     Layer[] layers;
 
 
-    //Constructor with number of neurons in first layer, last layer, and hidden layers.
-    public NeuralNetwork(int FirstLayerNumber, int LastLayerNumber, int HiddenLayersNumber, int NeuronsPerLayer)
+    // Constructor with number of neurons in first layer, last layer, and hidden layers.
+    public NeuralNetwork(int FirstLayerNumber, int LastLayerNumber, int HiddenLayersNumber, int NeuronsPerLayer, float MutationValue = 0.1f)
     {
         this.firstLayerNumber = FirstLayerNumber;
         this.lastLayerNumber = LastLayerNumber;
         this.hiddenLayersNumber = HiddenLayersNumber;
         this.neuronsPerLayer = NeuronsPerLayer;
+        this.mutationValue = MutationValue;
 
         Initialize();
     }
 
+    // Constructor to copy a neural network
+    public NeuralNetwork(NeuralNetwork neuralNetwork)
+    {
+        this.firstLayerNumber = neuralNetwork.firstLayerNumber;
+        this.lastLayerNumber = neuralNetwork.lastLayerNumber;
+        this.hiddenLayersNumber = neuralNetwork.hiddenLayersNumber;
+        this.neuronsPerLayer = neuralNetwork.neuronsPerLayer;
+        this.mutationValue = neuralNetwork.mutationValue;
+
+        Initialize();
+        CopyNeuralNetwork(neuralNetwork);
+    }
+
     // Methods: 
+
+    // Copy a neural network
+    public void CopyNeuralNetwork(NeuralNetwork neuralNetwork)
+    {
+        // For each layer
+        for (int i = 0; i < layers.Length; i++)
+        {
+            // For each neuron
+            for (int j = 0; j < layers[i].neurons.Length; j++)
+            {
+                // Copy each weight
+                for (int k = 0; k < layers[i].neurons[j].weights.Length; k++)
+                {
+                    layers[i].neurons[j].weights[k] = neuralNetwork.layers[i].neurons[j].weights[k];
+                }
+                // Copy bias
+                layers[i].neurons[j].bias = neuralNetwork.layers[i].neurons[j].bias;
+            }
+        }
+    }
 
     // Initialize the network
     public void Initialize() {
@@ -95,12 +130,12 @@ public class NeuralNetwork
             for (int j = 0; j < layers[i].neurons.Length; j++) {
                 // For each weight:
                 for (int k = 0; k < layers[i].neurons[j].weights.Length; k++) {
-                    // Mutate the weight:
-                    layers[i].neurons[j].weights[k] += Random.Range(-0.1f, 0.1f);
+                    // Mutate the weight:                    
+                    layers[i].neurons[j].weights[k] += Random.Range(-mutationValue, mutationValue);
                     layers[i].neurons[j].weights[k] = Mathf.Clamp(layers[i].neurons[j].weights[k], -1, 1);
                 }
                 // And the bias:
-                layers[i].neurons[j].bias += Random.Range(-0.1f, 0.1f);
+                layers[i].neurons[j].bias += Random.Range(-mutationValue, mutationValue);
                 layers[i].neurons[j].bias = Mathf.Clamp(layers[i].neurons[j].bias, -1, 1);
             }
         }
@@ -142,6 +177,23 @@ public class NeuralNetwork
 
     // Activation function: sigmoid
     float Sigmoid(float x) {
-        return 2 / (1 + Mathf.Exp(-x)) - 0.5f;
+        return (1 / (1 + Mathf.Exp(-x)) - 0.5f) * 2;
     } 
+
+    // Draws the neural network on the top right of the camera
+    public void DrawNetwork(Camera camera) {
+        // For each layer:
+        for (int i = 0; i < layers.Length; i++) {
+            // For each neuron:
+            for (int j = 0; j < layers[i].neurons.Length; j++) {
+                // For each weight:
+                for (int k = 0; k < layers[i].neurons[j].weights.Length; k++) {
+                    // Draw a line from the neuron to the neuron of the next layer:
+                    if (i != layers.Length - 1) {
+                        Debug.DrawLine(new Vector3(camera.transform.position.x + 0.5f + i * 0.5f, camera.transform.position.y + 0.5f + j * 0.5f, camera.transform.position.z), new Vector3(camera.transform.position.x + 1f + (i + 1) * 0.5f, camera.transform.position.y + 0.5f + k * 0.5f, camera.transform.position.z), Color.white);
+                    }
+                }
+            }
+        }
+    }
 }

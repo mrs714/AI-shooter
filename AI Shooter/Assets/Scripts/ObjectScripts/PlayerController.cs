@@ -96,12 +96,7 @@ public class PlayerController : MonoBehaviour
     // Create input array
     public float[] createInput()
     {
-        float[] input = new float[9]; // Position of the player, position of the closest enemy, position of the closest objective (x and z)
-
-        // Position of the player
-        input[0] = transform.position.x;
-        input[1] = transform.position.y;
-        input[2] = transform.position.z;
+        float[] input = new float[4]; // Position of the closest enemy, position of the closest objective (x and z)
 
         // Position of the closest enemy
         GameObject closestEnemy = findClosestElement("Enemy");
@@ -109,15 +104,13 @@ public class PlayerController : MonoBehaviour
         {
             // Calculate the direction vector to the enemy
             Vector3 direction = closestEnemy.transform.position - transform.position;
-            input[3] = direction.x;
-            input[4] = direction.y;
-            input[5] = direction.z;
+            input[0] = direction.x;
+            input[1] = direction.z;
         }
         else
         {
-            input[3] = 1000;
-            input[4] = 1000;
-            input[5] = 1000;
+            input[0] = 1000;
+            input[1] = 1000;
         }
         
         // Position of the closest objective
@@ -126,15 +119,13 @@ public class PlayerController : MonoBehaviour
         {
             // Calculate the direction vector to the objective
             Vector3 direction = closestObjective.transform.position - transform.position;
-            input[6] = direction.x;
-            input[7] = direction.y;
-            input[8] = direction.z;
+            input[2] = direction.x;
+            input[3] = direction.z;
         }
         else
         {
-            input[6] = 1000;
-            input[7] = 1000;
-            input[8] = 1000;
+            input[2] = 1000;
+            input[3] = 1000;
         }
 
         return input;
@@ -157,6 +148,6 @@ public class PlayerController : MonoBehaviour
             distance += Vector3.Distance(transform.position, zoneObjects[1][i].transform.position);
         }
         addReward(- (int)(distance));
-        addReward((int)Mathf.Abs((Vector3.Distance(transform.position, previousPosition) / 100)));
+        addReward((int)Mathf.Abs((Vector3.Distance(transform.position, previousPosition) / 10)));
     }
 }

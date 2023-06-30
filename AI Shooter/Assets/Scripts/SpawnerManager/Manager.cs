@@ -13,6 +13,7 @@ public class Manager : MonoBehaviour
     [SerializeField] int zoneSize = 30;
     [SerializeField] int typeOfTraining = 0; // 0 = runner, 1 = shooter, 2 = both, -1 = basic
     [SerializeField] float secondsPerGeneration = 15f;
+    [SerializeField] float mutationValue = 0.1f;
 
     // Prefabs to be set in the inspector
     public GameObject enemyPrefab;
@@ -114,7 +115,7 @@ public class Manager : MonoBehaviour
         NeuralNetwork[] neuralNetworks = new NeuralNetwork[numberOfZonesPerSide * numberOfZonesPerSide];
         for (int i = 0; i < neuralNetworks.Length; i++)
         {
-            neuralNetworks[i] = new NeuralNetwork(neuronsOnFirstLayer,2,5,10);
+            neuralNetworks[i] = new NeuralNetwork(neuronsOnFirstLayer,2,5,10, mutationValue);
         }
 
         return neuralNetworks;
@@ -136,13 +137,13 @@ public class Manager : MonoBehaviour
     NeuralNetwork[] createNeuralNetworksBasic()
     {
         // First, the ammount of parameters is calculated
-        int neuronsOnFirstLayer = 9; //3 for the position of the player, 3 for the position of the objective, 3 for the position of the enemy
+        int neuronsOnFirstLayer = 2; // Position of the closest objective
 
         // Then, we create the neural networks
         NeuralNetwork[] neuralNetworks = new NeuralNetwork[numberOfZonesPerSide * numberOfZonesPerSide];
         for (int i = 0; i < neuralNetworks.Length; i++)
         {
-            neuralNetworks[i] = new NeuralNetwork(neuronsOnFirstLayer,2,3,5);
+            neuralNetworks[i] = new NeuralNetwork(neuronsOnFirstLayer,2,2,5,mutationValue);
         }
 
         return neuralNetworks;
@@ -157,15 +158,20 @@ public class Manager : MonoBehaviour
         maxAwardedScore = players[players.Count - 1].GetComponentInChildren<PlayerController>().points;
 
         // If there are n*n scenarios, each one with one player, we select the best n players to copy their neural network n times
+        // We copy only the best one
         for (int i = 0; i < numberOfZonesPerSide; i++)
-        {
-            for (int j = 0; j < numberOfZonesPerSide; j++)
+        {   
+            neuralNetworks[i] = players[players.Count - 1].GetComponentInChildren<PlayerController>()._neuralNetwork;            
+            /*for (int j = 0; j < numberOfZonesPerSide; j++)
             {
                 // Copies the neural network of the best player to the list of neural networks
                 int index = (i * numberOfZonesPerSide) + j;
                 neuralNetworks[index] = players[players.Count - 1 - index].GetComponentInChildren<PlayerController>()._neuralNetwork;
-            }
+            }*/
         }
+
+        // Draw the neural network of the best player
+        players[players.Count - 1].GetComponentInChildren<PlayerController>()._neuralNetwork.DrawNetwork(FindObjectOfType<Camera>());
 
         // Then, we can mutate the neural networks
         for (int i = 0; i < neuralNetworks.Length; i++)
