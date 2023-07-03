@@ -124,13 +124,13 @@ public class Manager : MonoBehaviour
     // Creates the neural networks for the shooter players
     NeuralNetwork[] createNeuralNetworksShooter()
     {
-        return null;
+        return null; // TODO
     }
 
     // Creates the neural networks for the shooter and runner players
     NeuralNetwork[] createNeuralNetworksBoth()
     {
-        return null;
+        return null; // TODO
     }
 
     // Creates the neural networks for the basic players
@@ -146,6 +146,9 @@ public class Manager : MonoBehaviour
             neuralNetworks[i] = new NeuralNetwork(neuronsOnFirstLayer,2,2,5,mutationValue);
         }
 
+        // Check if the first nn is equal to itself
+        Debug.Log("First nn equal to itself: " + neuralNetworks[0].IsEqual(neuralNetworks[0]));
+
         return neuralNetworks;
     }
 
@@ -158,13 +161,13 @@ public class Manager : MonoBehaviour
         maxAwardedScore = players[players.Count - 1].GetComponentInChildren<PlayerController>().points;
 
         // If there are n*n scenarios, each one with one player, we select the best n players to copy their neural network n times
-        // We copy only the best one
+        // We copy only the best one for the moment
         for (int i = 0; i < numberOfZonesPerSide; i++)
         {    
             for (int j = 0; j < numberOfZonesPerSide; j++)
             {
                 
-                neuralNetworks[i] = new NeuralNetwork(players[players.Count - 1].GetComponentInChildren<PlayerController>()._neuralNetwork);           
+                neuralNetworks[i * numberOfZonesPerSide + j] = new NeuralNetwork(players[players.Count - 1].GetComponentInChildren<PlayerController>()._neuralNetwork);           
                 /* Copies the neural network of the best player to the list of neural networks
                 int index = (i * numberOfZonesPerSide) + j;
                 neuralNetworks[index] = players[players.Count - 1 - index].GetComponentInChildren<PlayerController>()._neuralNetwork;
@@ -172,10 +175,11 @@ public class Manager : MonoBehaviour
             }
         }
 
-        // Draw the neural network of the best player
-        players[players.Count - 1].GetComponentInChildren<PlayerController>()._neuralNetwork.DrawNetwork(FindObjectOfType<Camera>());
+        // Draw the neural network of the best player TODO
+        // players[players.Count - 1].GetComponentInChildren<PlayerController>()._neuralNetwork.DrawNetwork(FindObjectOfType<Camera>());
 
         // Then, we can mutate the neural networks
+        // Checks that the first and last nn are equal
         for (int i = 0; i < neuralNetworks.Length; i++)
         {
             neuralNetworks[i].Mutate();
@@ -210,7 +214,7 @@ public class Manager : MonoBehaviour
         walls.Clear();
 
         //delete zoneObjects
-        zoneObjects = new List<List<List<GameObject>>>();
+        zoneObjects.Clear();
     }
 
 

@@ -77,6 +77,7 @@ public class PlayerController : MonoBehaviour
         float distance = Mathf.Infinity;
         Vector3 position = transform.position;
         List<GameObject> objects = new List<GameObject>(zoneObjects[0]);
+        objects.AddRange(zoneObjects[1]);
         foreach (GameObject element in objects)
         {
             if (element.tag == type)
@@ -96,22 +97,7 @@ public class PlayerController : MonoBehaviour
     // Create input array
     public float[] createInput()
     {
-        float[] input = new float[4]; // Position of the closest enemy, position of the closest objective (x and z)
-
-        // Position of the closest enemy
-        GameObject closestEnemy = findClosestElement("Enemy");
-        if (closestEnemy != null)
-        {
-            // Calculate the direction vector to the enemy
-            Vector3 direction = closestEnemy.transform.position - transform.position;
-            input[0] = direction.x;
-            input[1] = direction.z;
-        }
-        else
-        {
-            input[0] = 1000;
-            input[1] = 1000;
-        }
+        float[] input = new float[4]; // Position of the closest objective (x and z)
         
         // Position of the closest objective
         GameObject closestObjective = findClosestElement("Reward");
@@ -119,13 +105,14 @@ public class PlayerController : MonoBehaviour
         {
             // Calculate the direction vector to the objective
             Vector3 direction = closestObjective.transform.position - transform.position;
-            input[2] = direction.x;
-            input[3] = direction.z;
+            input[0] = direction.x;
+            input[1] = direction.z;
         }
         else
         {
-            input[2] = 1000;
-            input[3] = 1000;
+            input[0] = 1000;
+            input[1] = 1000;
+            Debug.Log("No objective found");
         }
 
         return input;
@@ -147,7 +134,7 @@ public class PlayerController : MonoBehaviour
         {
             distance += Vector3.Distance(transform.position, zoneObjects[1][i].transform.position);
         }
-        addReward(- (int)(distance));
-        addReward((int)Mathf.Abs((Vector3.Distance(transform.position, previousPosition) / 10)));
+        addReward(- (int)(2 * distance));
+        addReward((int)Mathf.Abs((Vector3.Distance(transform.position, previousPosition) / 15)));
     }
 }

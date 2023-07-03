@@ -180,6 +180,29 @@ public class NeuralNetwork
         return (1 / (1 + Mathf.Exp(-x)) - 0.5f) * 2;
     } 
 
+    // Checks if two neural networks are the same
+    public bool IsEqual(NeuralNetwork other) {
+        // For each layer:
+        for (int i = 0; i < layers.Length; i++) {
+            // For each neuron:
+            for (int j = 0; j < layers[i].neurons.Length; j++) {
+                // For each weight:
+                for (int k = 0; k < layers[i].neurons[j].weights.Length; k++) {
+                    // If the weights are different, return false:
+                    if (layers[i].neurons[j].weights[k] != other.layers[i].neurons[j].weights[k]) {
+                        return false;
+                    }
+                }
+                // If the bias is different, return false:
+                if (layers[i].neurons[j].bias != other.layers[i].neurons[j].bias) {
+                    return false;
+                }
+            }
+        }
+        // If everything is the same, return true:
+        return true;
+    }
+
     // Draws the neural network on the top right of the camera
     public void DrawNetwork(Camera camera) {
         // For each layer:
