@@ -11,8 +11,10 @@ public class Manager : MonoBehaviour
     [SerializeField] int startingX = -100;
     [SerializeField] int startingY = -100;
     [SerializeField] int zoneSize = 30;
-    [SerializeField] int typeOfTraining = 0; // 0 = runner, 1 = shooter, 2 = both, -1 = basic
+    enum TypeOfTraining {runner, shooter, both, basic};
+    [SerializeField] TypeOfTraining typeOfTraining = TypeOfTraining.basic;
     [SerializeField] float secondsPerGeneration = 15f;
+    [Range(0f, 1f)]
     [SerializeField] float mutationValue = 0.1f;
 
     // Prefabs to be set in the inspector
@@ -41,22 +43,22 @@ public class Manager : MonoBehaviour
         // We start with a blank (random) neural network
         // We can select the type of training we want to do
         // 0 = runner, 1 = shooter, 2 = both
-        if (typeOfTraining == 0)
+        if (typeOfTraining == TypeOfTraining.runner)
         {
             neuralNetworks = createNeuralNetworksRunner();
             spawnRunners(neuralNetworks);
         }
-        else if (typeOfTraining == 1)
+        else if (typeOfTraining == TypeOfTraining.runner)
         {
             neuralNetworks = createNeuralNetworksShooter();
             spawnShooters(neuralNetworks);
         }
-        else if (typeOfTraining == 2)
+        else if (typeOfTraining == TypeOfTraining.both)
         {
             neuralNetworks = createNeuralNetworksBoth();
             spawnBoth(neuralNetworks);
         }
-        else if (typeOfTraining == -1)
+        else if (typeOfTraining == TypeOfTraining.basic)
         {
             numberOfEnemies = 1;
             numberOfObjectives = 1;
@@ -79,19 +81,19 @@ public class Manager : MonoBehaviour
             deleteObjects();
             
             // Respawn them
-            if (typeOfTraining == 0)
+            if (typeOfTraining == TypeOfTraining.runner)
             {
                 spawnRunners(neuralNetworks);
             }
-            else if (typeOfTraining == 1)
+            else if (typeOfTraining == TypeOfTraining.shooter)
             {
                 spawnShooters(neuralNetworks);
             }
-            else if (typeOfTraining == 2)
+            else if (typeOfTraining == TypeOfTraining.both)
             {
                 spawnBoth(neuralNetworks);
             }
-            else if (typeOfTraining == -1)
+            else if (typeOfTraining == TypeOfTraining.basic)
             {
                 spawnBasic(neuralNetworks);
             }
