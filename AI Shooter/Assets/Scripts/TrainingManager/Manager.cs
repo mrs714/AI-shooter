@@ -5,14 +5,19 @@ using UnityEngine;
 public class Manager : MonoBehaviour
 {
     // Private variables, available in the inspector
+    [Range(0, 25)]
     [SerializeField] int numberOfEnemies = 10;
+    [Range(1, 10)]
     [SerializeField] int numberOfObjectives = 10;
+    [Range(1, 20)]
     [SerializeField] int numberOfZonesPerSide = 3;
-    [SerializeField] int startingX = -100;
-    [SerializeField] int startingY = -100;
+    int startingX; // Set based on the number of zones
+    int startingY;
+    [Range(10, 50)]
     [SerializeField] int zoneSize = 30;
     enum TypeOfTraining {runner, shooter, both, basic};
     [SerializeField] TypeOfTraining typeOfTraining = TypeOfTraining.basic;
+    [Range(1, 50)]
     [SerializeField] float secondsPerGeneration = 15f;
     [Range(0f, 1f)]
     [SerializeField] float mutationValue = 0.1f;
@@ -40,6 +45,10 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
+        // Set the starting position of the zones
+        startingX = - numberOfZonesPerSide * zoneSize / 2;
+        startingY = - numberOfZonesPerSide * zoneSize / 2;
+
         // We start with a blank (random) neural network
         // We can select the type of training we want to do
         // 0 = runner, 1 = shooter, 2 = both
@@ -60,7 +69,7 @@ public class Manager : MonoBehaviour
         }
         else if (typeOfTraining == TypeOfTraining.basic)
         {
-            numberOfEnemies = 1;
+            numberOfEnemies = 0;
             numberOfObjectives = 1;
             neuralNetworks = createNeuralNetworksBasic();
             spawnBasic(neuralNetworks);
@@ -148,9 +157,6 @@ public class Manager : MonoBehaviour
             neuralNetworks[i] = new NeuralNetwork(neuronsOnFirstLayer,2,2,5,mutationValue);
         }
 
-        // Check if the first nn is equal to itself
-        Debug.Log("First nn equal to itself: " + neuralNetworks[0].IsEqual(neuralNetworks[0]));
-
         return neuralNetworks;
     }
 
@@ -161,6 +167,12 @@ public class Manager : MonoBehaviour
         // Sorts the players by score
         players.Sort((x, y) => x.GetComponentInChildren<PlayerController>().points.CompareTo(y.GetComponentInChildren<PlayerController>().points));
         maxAwardedScore = players[players.Count - 1].GetComponentInChildren<PlayerController>().points;
+
+        // Print the score of each player
+        for (int i = 0; i < players.Count; i++)
+        {
+            Debug.Log("Player " + i + " has " + players[i].GetComponentInChildren<PlayerController>().points + " points");
+        }
 
         // If there are n*n scenarios, each one with one player, we select the best n players to copy their neural network n times
         // We copy only the best one for the moment
@@ -181,7 +193,6 @@ public class Manager : MonoBehaviour
         // players[players.Count - 1].GetComponentInChildren<PlayerController>()._neuralNetwork.DrawNetwork(FindObjectOfType<Camera>());
 
         // Then, we can mutate the neural networks
-        // Checks that the first and last nn are equal
         for (int i = 0; i < neuralNetworks.Length; i++)
         {
             neuralNetworks[i].Mutate();
@@ -218,6 +229,11 @@ public class Manager : MonoBehaviour
         //delete zoneObjects
         zoneObjects.Clear();
     }
+
+
+
+
+
 
 
 

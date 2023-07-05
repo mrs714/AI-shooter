@@ -39,6 +39,9 @@ public class PlayerController : MonoBehaviour
         // Rewards and punishments
         rewardPlayer();
 
+        // Paint the player
+        paintPlayer();
+
     }
 
     // Collision handler
@@ -51,6 +54,8 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.tag == "Reward")
         {
             addReward(20000);
+            // Put camera on the objective
+            Camera.main.transform.position = new Vector3(collision.gameObject.transform.position.x, 100, collision.gameObject.transform.position.z);
         }
     }
 
@@ -132,9 +137,32 @@ public class PlayerController : MonoBehaviour
         float distance = 0;
         for (int i = 0; i < zoneObjects[1].Count; i++)
         {
-            distance += Vector3.Distance(transform.position, zoneObjects[1][i].transform.position);
+            distance += Mathf.Abs(Vector3.Distance(transform.position, zoneObjects[1][i].transform.position));
         }
-        addReward(- (int)(2 * distance));
+        addReward(- (int)(distance / 10));
         addReward((int)Mathf.Abs((Vector3.Distance(transform.position, previousPosition) / 15)));
+    }
+
+    // Paint the player depending on the points (better --> greener, worse --> redder)
+    public void paintPlayer()
+    {
+        float r = 0;
+        float g = 0;
+        float b = 0;
+        if (points < 0)
+        {
+            g = 1;
+            r = 1 - (points / 10000);
+        }
+        else
+        {
+            r = 1;
+            g = 1 + (points / 10000);
+        }
+        GetComponentInChildren<Renderer>().material.color = new Color(r, g, b);
+        // Print color
+        // Debug.Log("R: " + r + " G: " + g + " B: " + b);
+        // Print points
+        // Debug.Log("Points: " + points);
     }
 }
