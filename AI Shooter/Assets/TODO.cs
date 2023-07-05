@@ -5,6 +5,9 @@ using UnityEngine;
 public class TODO : MonoBehaviour
 {
     /*
-    comprovar que el canvi de nn es fa correctament
+    - Implement the drawing of the neural network
+    - Implement DRY on spawning the players
+    - Update README.md
+    - Make the camera follow the player with the highest score
     */
 }

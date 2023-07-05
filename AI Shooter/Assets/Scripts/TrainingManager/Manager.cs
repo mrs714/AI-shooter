@@ -175,17 +175,16 @@ public class Manager : MonoBehaviour
         }
 
         // If there are n*n scenarios, each one with one player, we select the best n players to copy their neural network n times
-        // We copy only the best one for the moment
         for (int i = 0; i < numberOfZonesPerSide; i++)
         {    
             for (int j = 0; j < numberOfZonesPerSide; j++)
             {
                 
-                neuralNetworks[i * numberOfZonesPerSide + j] = new NeuralNetwork(players[players.Count - 1].GetComponentInChildren<PlayerController>()._neuralNetwork);           
-                /* Copies the neural network of the best player to the list of neural networks
+                // neuralNetworks[i * numberOfZonesPerSide + j] = new NeuralNetwork(players[players.Count - 1].GetComponentInChildren<PlayerController>()._neuralNetwork); - copies only the best       
+                // Copies the neural network of the best player to the list of neural networks
                 int index = (i * numberOfZonesPerSide) + j;
                 neuralNetworks[index] = players[players.Count - 1 - index].GetComponentInChildren<PlayerController>()._neuralNetwork;
-                */
+
             }
         }
 
@@ -385,8 +384,11 @@ public class Manager : MonoBehaviour
 
                 spawnEnemies(zoneStartingX, zoneDispersionX, zoneStartingY, zoneDispersionY, "Light");
                 
+                if (generation < 10) {
                 spawnObjectives(zoneStartingX + (dispersionX / 2), zoneStartingX + (dispersionX / 2), zoneStartingY + (dispersionY / 4), zoneStartingY + (dispersionY / 4));             
-
+                } else {
+                spawnObjectives(zoneStartingX, zoneStartingX + (dispersionX), zoneStartingY + (dispersionY / 4), zoneStartingY + (dispersionY));             
+                }
                 // spawn player
                 GameObject playerObject = Instantiate(playerPrefab, new Vector3(zoneStartingX + dispersionX / 2, 0, zoneStartingY), Quaternion.identity);
                 playerObject.GetComponentInChildren<PlayerController>()._neuralNetwork = neuralNetworks[i * numberOfZonesPerSide + j];

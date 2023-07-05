@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.tag == "Obstacle" || collision.gameObject.tag == "Enemy")
         {
             //reward
-            addReward(-1);
+            addReward(-10);
         }
     }
 
