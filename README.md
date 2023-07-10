@@ -2,14 +2,14 @@
 Unity project to create and train an agent with a neural network using a genetic algorithm to do diverse tasks, like avoiding enemies or leading projectiles correctly.
 
 
-Main Objectives:
+*Main Objectives:*
 
 This project has been done with two main objectives in mind. The first was to get a more comprehensive look at some of Unity's features, such as instantiating prefabs, creating an intuitive Unity UI through sliders, selectors and such, building robust, self-contained classes, with well-implemented OOP, delving into C# handling of private, protected, and public types among others...
 The second, more important objective, was to build a neural network and implement a genetic algorithm by hand. While I had previously worked with intelligent agents, it was through the use of MLAgents during my research project. 
 Now, having done the research, and having a deeper understanding of the nature of both NN and genetic algorithms, I wanted to build them from the ground up to strengthen my knowledge.
 
 
-How to use the project?
+*How to use the project?*
 
 This repository contains the full folder of the Unity project (Unity version - 2022.1.23f1). After opening it like any other project, the scene contains two main things: the folder of the scene objects, which contains the plane that makes up the floor, the camera, and the light, and the TrainingManager, an empty object which contains the script that handles the spawning of all the objects for the training. The manager has the main settings which can be changed:
 - Training: Whether the manager is active or not. If the box is checked, everything will be spawned according to the settings.
@@ -23,5 +23,6 @@ This repository contains the full folder of the Unity project (Unity version - 2
 - Enemy, objective, player and wall prefab: slots to put the prefabs of each element, so as not be limited to one type of enemy or reward/objective, for example.
 
 
-What comes after this?
+*What comes after this?*
+
 I intend the classes I developed in this process (the neural network and manager, mainly) to be the backbone of a future project, which will aim to simulate a typical environment, containing plants, preys and predators, both of which will evolve "naturally".
