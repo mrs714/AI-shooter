@@ -24,3 +24,4 @@ This repository contains the full folder of the Unity project (Unity version - 2
 
 
 What comes after this?
+I intend the classes I developed in this process (the neural network and manager, mainly) to be the backbone of a future project, which will aim to simulate a typical environment, containing plants, preys and predators, both of which will evolve "naturally".
