@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Manager : MonoBehaviour
 {
+
+    // Settings
+    [Tooltip("If true, training will be done, otherwise inference will be done. ")]
+    public bool training = true;
+
     // Private variables, available in the inspector
     [Range(0, 25)]
     [SerializeField] int numberOfEnemies = 10;
@@ -45,34 +50,42 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
-        // Set the starting position of the zones
-        startingX = - numberOfZonesPerSide * zoneSize / 2;
-        startingY = - numberOfZonesPerSide * zoneSize / 2;
+        if (training)
+        {
+            // Set the starting position of the zones
+            startingX = - numberOfZonesPerSide * zoneSize / 2;
+            startingY = - numberOfZonesPerSide * zoneSize / 2;
 
-        // We start with a blank (random) neural network
-        // We can select the type of training we want to do
-        // 0 = runner, 1 = shooter, 2 = both
-        if (typeOfTraining == TypeOfTraining.runner)
-        {
-            neuralNetworks = createNeuralNetworksRunner();
-            spawnRunners(neuralNetworks);
+            // We start with a blank (random) neural network
+            // We can select the type of training we want to do
+            // 0 = runner, 1 = shooter, 2 = both
+            if (typeOfTraining == TypeOfTraining.runner)
+            {
+                neuralNetworks = createNeuralNetworksRunner();
+                spawnRunners(neuralNetworks);
+            }
+            else if (typeOfTraining == TypeOfTraining.runner)
+            {
+                neuralNetworks = createNeuralNetworksShooter();
+                spawnShooters(neuralNetworks);
+            }
+            else if (typeOfTraining == TypeOfTraining.both)
+            {
+                neuralNetworks = createNeuralNetworksBoth();
+                spawnBoth(neuralNetworks);
+            }
+            else if (typeOfTraining == TypeOfTraining.basic)
+            {
+                numberOfEnemies = 0;
+                numberOfObjectives = 1;
+                neuralNetworks = createNeuralNetworksBasic();
+                spawnBasic(neuralNetworks);
+            }
         }
-        else if (typeOfTraining == TypeOfTraining.runner)
+        else
         {
-            neuralNetworks = createNeuralNetworksShooter();
-            spawnShooters(neuralNetworks);
-        }
-        else if (typeOfTraining == TypeOfTraining.both)
-        {
-            neuralNetworks = createNeuralNetworksBoth();
-            spawnBoth(neuralNetworks);
-        }
-        else if (typeOfTraining == TypeOfTraining.basic)
-        {
-            numberOfEnemies = 0;
-            numberOfObjectives = 1;
-            neuralNetworks = createNeuralNetworksBasic();
-            spawnBasic(neuralNetworks);
+            // Disable the trainer
+            this.enabled = false;
         }
     }
 
@@ -180,10 +193,10 @@ public class Manager : MonoBehaviour
             for (int j = 0; j < numberOfZonesPerSide; j++)
             {
                 
-                // neuralNetworks[i * numberOfZonesPerSide + j] = new NeuralNetwork(players[players.Count - 1].GetComponentInChildren<PlayerController>()._neuralNetwork); - copies only the best       
+                neuralNetworks[i * numberOfZonesPerSide + j] = new NeuralNetwork(players[players.Count - 1].GetComponentInChildren<PlayerController>()._neuralNetwork); // - copies only the best       
                 // Copies the neural network of the best player to the list of neural networks
-                int index = (i * numberOfZonesPerSide) + j;
-                neuralNetworks[index] = players[players.Count - 1 - index].GetComponentInChildren<PlayerController>()._neuralNetwork;
+                /* int index = (i * numberOfZonesPerSide) + j;
+                neuralNetworks[index] = players[players.Count - 1 - index].GetComponentInChildren<PlayerController>()._neuralNetwork; */
 
             }
         }

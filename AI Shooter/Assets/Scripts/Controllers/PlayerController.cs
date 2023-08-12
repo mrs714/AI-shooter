@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    // Settings
+    [Tooltip("Put here a neural network to load it, created during a previous training session. This won't be used if the player is created by the manager during training, but can still be set.")]
+    public NeuralNetwork neuralNetworkToLoad = null;
+
     //Public variables
     public float speed = 1000f;
     public int points = 0; // Points are used to reward the player for good actions and punish for bad ones
-    public NeuralNetwork _neuralNetwork; // The neural network is assigned from the manager
+    public NeuralNetwork _neuralNetwork; // The neural network is assigned from the manager during training, or at the start of the game during inference
     public List<List<GameObject>> zoneObjects; // List that contains a list with a list of all the objects of each zone, sorted by type, provided to the players; enemies, objectives
-        
+    
     // Private variables
     Rigidbody _rigidbody = null;
     Vector3 previousPosition = Vector3.zero;
@@ -18,7 +22,10 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        
+        if (neuralNetworkToLoad != null)
+        {
+            _neuralNetwork = neuralNetworkToLoad;
+        }        
     }
 
     // Handles input and rewards for distance
@@ -139,6 +146,7 @@ public class PlayerController : MonoBehaviour
         {
             distance += Mathf.Abs(Vector3.Distance(transform.position, zoneObjects[1][i].transform.position));
         }
+
         addReward(- (int)(distance / 10));
         addReward((int)Mathf.Abs((Vector3.Distance(transform.position, previousPosition) / 15)));
     }

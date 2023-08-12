@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 5429319272996313968}
   - component: {fileID: 5429319272996313970}
   m_Layer: 0
-  m_Name: Red
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -160,7 +160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 639ff1dcaa7a74544bac94fef26781a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 500
+  speed: 1000
   points: 0
 --- !u!1 &5429319273047096356
 GameObject:
