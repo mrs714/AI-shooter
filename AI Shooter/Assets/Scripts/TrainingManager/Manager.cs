@@ -26,12 +26,17 @@ public class Manager : MonoBehaviour
     [SerializeField] float secondsPerGeneration = 15f;
     [Range(0f, 1f)]
     [SerializeField] float mutationValue = 0.1f;
+    // Visualization of the neural network
+    [SerializeField] bool drawNeuralNetwork = false;
+
 
     // Prefabs to be set in the inspector
     public GameObject enemyPrefab;
     public GameObject objectivePrefab;
     public GameObject playerPrefab;
     public GameObject wallPrefab;
+    public GameObject neuronPrefab;
+    public GameObject synapsePrefab;
 
     // List of players, enemies, walls, objectives, and nn
     List<GameObject> players = new List<GameObject>();
@@ -47,6 +52,8 @@ public class Manager : MonoBehaviour
     int generation = 0;
     int maxAwardedScore = int.MinValue;
 
+    // Objects to draw the NN
+    private List<GameObject> NeuronsAndSynapses;
 
     void Start()
     {
@@ -81,6 +88,13 @@ public class Manager : MonoBehaviour
                 neuralNetworks = createNeuralNetworksBasic();
                 spawnBasic(neuralNetworks);
             }
+
+            // Draw the neural network of the first player
+            if (drawNeuralNetwork)
+            {
+                NeuronsAndSynapses = neuralNetworks[0].Create3DRepresentation(neuronPrefab, synapsePrefab);
+            }
+
         }
         else
         {
@@ -126,6 +140,10 @@ public class Manager : MonoBehaviour
             //print info generation
             generation++;
             Debug.Log("Generation: " + generation + ". Max Score: " + maxAwardedScore);
+        }
+        if (drawNeuralNetwork)
+        {
+            neuralNetworks[0].DrawNetwork(NeuronsAndSynapses);
         }
     }
 

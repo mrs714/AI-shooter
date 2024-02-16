@@ -31,6 +31,10 @@ public class NeuralNetwork
     float mutationValue;
     Layer[] layers;
 
+    // For representation
+    public int distanceBetweenLayers = 4;
+    public int verticalDistance = 2;
+
 
     // Constructor with number of neurons in first layer, last layer, and hidden layers.
     public NeuralNetwork(int FirstLayerNumber, int LastLayerNumber, int HiddenLayersNumber, int NeuronsPerLayer, float MutationValue = 0.1f)
@@ -203,18 +207,142 @@ public class NeuralNetwork
         return true;
     }
 
-    // Draws the neural network on the top right of the camera
-    public void DrawNetwork(Camera camera) {
-        // For each layer:
+    // Creates the 3D representation of the NN from the prefabs "Neuron" and "Connection"
+    public List<GameObject> Create3DRepresentation(GameObject NeuronPrefab, GameObject ConnectionPrefab, int distanceBetweenLayers = 2, int verticalDistance = 2) {
+
+        distanceBetweenLayers = this.distanceBetweenLayers;
+        verticalDistance = this.verticalDistance;
+
+        // List of neurons:
+        List<GameObject> neurons = new List<GameObject>();
+        // List of connections:
+        List<GameObject> connections = new List<GameObject>();
+
+        // Max ammount of neurons in any layer:
+        int maxNeurons = Mathf.Max(firstLayerNumber, lastLayerNumber, neuronsPerLayer);
+
+        // Neurons
         for (int i = 0; i < layers.Length; i++) {
             // For each neuron:
             for (int j = 0; j < layers[i].neurons.Length; j++) {
-                // For each weight:
-                for (int k = 0; k < layers[i].neurons[j].weights.Length; k++) {
-                    // Draw a line from the neuron to the neuron of the next layer:
-                    if (i != layers.Length - 1) {
-                        Debug.DrawLine(new Vector3(camera.transform.position.x + 0.5f + i * 0.5f, camera.transform.position.y + 0.5f + j * 0.5f, camera.transform.position.z), new Vector3(camera.transform.position.x + 1f + (i + 1) * 0.5f, camera.transform.position.y + 0.5f + k * 0.5f, camera.transform.position.z), Color.white);
-                    }
+                // Create a neuron:
+                // Get the ammount of neurons in the layer we are in:
+                int length = 0;
+
+                if (i == 0) {
+                    length = firstLayerNumber;
+                }
+                else if (i == hiddenLayersNumber + 1) {
+                    length = lastLayerNumber;
+                }
+                else {
+                    length = neuronsPerLayer;
+                }  
+
+                // Calculate the height depending on the max ammount of neurons for any layer, and the length of the layer we are in, centered around 2 in the y axis:
+                float height = (maxNeurons - length) + j * verticalDistance;
+
+                // Create a neuron centered in the y axis depending on the length of the layer and the max ammount of neurons:
+                GameObject neuron = GameObject.Instantiate(NeuronPrefab, new Vector3(i * distanceBetweenLayers, height, 0), Quaternion.identity);
+
+                // Add the neuron to the list:
+                neurons.Add(neuron);
+            }
+        }
+
+        // Connections
+        int counter = 0;
+        for (int i = 0; i < layers.Length - 1; i++) {
+            int counter_layer = 0;
+            // For each neuron:
+            for (int j = 0; j < layers[i].neurons.Length; j++) {
+                int counter_next = 0;
+                // For each neuron in the next layer:
+                for (int k = 0; k < layers[i + 1].neurons.Length; k++) {
+
+                    // Create a connection between the neurons:
+                    GameObject actual_neuron = neurons[counter];
+                    GameObject next_neuron = neurons[layers[i].neurons.Length + counter_next + counter - counter_layer];
+
+                    // Get the heights of both neurons
+                    float height_actual = actual_neuron.transform.position.y;
+                    float height_next = next_neuron.transform.position.y;
+                    float height = (height_next + height_actual) / 2;
+
+                    // Create the connection:
+                    GameObject connection = GameObject.Instantiate(ConnectionPrefab, new Vector3((i * distanceBetweenLayers) + (distanceBetweenLayers/2), height, 0), Quaternion.identity);
+                    
+                    // Rotate 90 degrees in the x axis:
+                    connection.transform.Rotate(0, 0, 90);
+
+                    float diff_height = (int)(height_next - height_actual);
+                    float diagonal = Mathf.Round(Mathf.Sqrt(distanceBetweenLayers * distanceBetweenLayers + diff_height * diff_height) * 1000) / 1000f;
+                    float angle = Mathf.Asin((diff_height/diagonal));
+
+                    // Rotate the connection to point to the next neuron:
+                    connection.transform.Rotate(0, 0, angle * Mathf.Rad2Deg);
+
+                    // Calculate the space to fill
+                    float diff_distance = diagonal/(2);
+
+                    // Adjust the scale based on the calculated height difference
+                    connection.transform.localScale = new Vector3(0.1f, diff_distance, 0.1f);
+
+                    // Add the connection to the list:
+                    connections.Add(connection);
+                    
+                    counter_next++;
+                }
+                counter_layer++;
+                counter++;
+            }
+        }
+
+        // Return the list of neurons so they can be moved later:
+        // Join the list of neurons and connections:
+        List<GameObject> objects = new List<GameObject>();
+        objects.AddRange(neurons);
+        objects.AddRange(connections);
+        return objects;
+    }
+
+    // Draws the neural network on the top right of the camera
+    public void DrawNetwork(List<GameObject> objects) {
+        // Calculate the ammount of neurons and connections:
+        int neuronsCount = firstLayerNumber + lastLayerNumber + hiddenLayersNumber * neuronsPerLayer;
+
+        List<GameObject> neurons = objects.GetRange(0, neuronsCount);
+        List<GameObject> connections = objects.GetRange(neuronsCount, objects.Count - neuronsCount);
+
+        // Give each neuron a color depending on its value, from red to green:
+        int count = 0;
+        for (int i = 0; i < layers.Length; i++) {
+            for (int j = 0; j < layers[i].neurons.Length; j++) {
+
+                // Gradient from red to green:
+                float value = layers[i].neurons[j].value;
+                Color color = new Color(1 - value, value, 0);
+                neurons[count].GetComponent<Renderer>().material.color = color;
+
+                count++;
+            }
+        }
+
+        // Now the connections:
+        count = 0;
+        for (int i = 0; i < layers.Length - 1; i++) {
+            for (int j = 0; j < layers[i].neurons.Length; j++) {
+                for (int k = 0; k < layers[i + 1].neurons.Length; k++) {
+                    // Get the connection:
+                    GameObject connection = connections[count];
+
+                    // Set color depending on weight:
+                    float weight = layers[i].neurons[j].weights[k];
+                    weight = (weight + 1) / 2; // Scale from {-1, 1} to {0, 1}
+                    Color color = new Color(1 - weight, weight, 0);
+                    connection.GetComponent<Renderer>().material.color = color;
+
+                    count++;
                 }
             }
         }
