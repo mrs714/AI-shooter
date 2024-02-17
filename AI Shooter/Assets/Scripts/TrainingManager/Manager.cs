@@ -57,6 +57,10 @@ public class Manager : MonoBehaviour
     [Tooltip("Path to the file to load the neural network from")]
     public string fileToLoad = "Assets/NeuralNetwork.txt";
 
+    [Header("Others")]
+    [Range(1, 10)]
+    [SerializeField] int GameSpeed = 1;
+
 
     // List of players, enemies, walls, objectives, and nn
     List<GameObject> players = new List<GameObject>();
@@ -77,6 +81,9 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
+        // Adjust time
+        Time.timeScale = GameSpeed;
+
         if (training)
         {
             // Set the starting position of the zones

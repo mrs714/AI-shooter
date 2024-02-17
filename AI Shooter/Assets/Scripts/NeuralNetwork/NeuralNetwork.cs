@@ -207,6 +207,65 @@ public class NeuralNetwork
         return true;
     }
 
+    // Save the neural network to a file
+    public void SaveToFile(string path) {
+        // Create a new file:
+        System.IO.FileStream file = System.IO.File.Create(path);
+        // Print FirstLayerNumber, LastLayerNumber, HiddenLayersNumber, NeuronsPerLayer, MutationValue in the first line:
+        string line = firstLayerNumber + " " + lastLayerNumber + " " + hiddenLayersNumber + " " + neuronsPerLayer + " " + mutationValue + "\n";
+        // After that, print the weights and biases of each neuron:
+        for (int i = 0; i < layers.Length; i++) {
+            for (int j = 0; j < layers[i].neurons.Length; j++) {
+                for (int k = 0; k < layers[i].neurons[j].weights.Length; k++) {
+                    line += layers[i].neurons[j].weights[k] + " ";
+                }
+                line += layers[i].neurons[j].bias + "\n";
+            }
+        }
+        // Convert the string to bytes:
+        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(line);
+        // Write the bytes to the file:
+        file.Write(bytes, 0, bytes.Length);
+        // Close the file:
+        file.Close();
+    }
+
+    // Load the neural network from a file
+    public void LoadFromFile(string path) {
+        // Read the file:
+        string line = System.IO.File.ReadAllText(path);
+        // Split the string by lines:
+        string[] lines = line.Split('\n');
+        // Split the first line by spaces:
+        string[] values = lines[0].Split(' ');
+        // Get the values of FirstLayerNumber, LastLayerNumber, HiddenLayersNumber, NeuronsPerLayer, MutationValue:
+        firstLayerNumber = int.Parse(values[0]);
+        lastLayerNumber = int.Parse(values[1]);
+        hiddenLayersNumber = int.Parse(values[2]);
+        neuronsPerLayer = int.Parse(values[3]);
+        mutationValue = float.Parse(values[4]);
+        // Initialize the network:
+        Initialize();
+        // For each layer:
+        int counter = 1;
+        for (int i = 0; i < layers.Length; i++) {
+            // For each neuron:
+            for (int j = 0; j < layers[i].neurons.Length; j++) {
+                // Split the line by spaces:
+                values = lines[counter].Split(' ');
+                // For each weight:
+                for (int k = 0; k < layers[i].neurons[j].weights.Length; k++) {
+                    // Get the weight:
+                    layers[i].neurons[j].weights[k] = float.Parse(values[k]);
+                }
+                // Get the bias:
+                layers[i].neurons[j].bias = float.Parse(values[values.Length - 1]);
+                // Increase the counter:
+                counter++;
+            }
+        }
+    }
+
     // Creates the 3D representation of the NN from the prefabs "Neuron" and "Connection"
     public List<GameObject> Create3DRepresentation(GameObject NeuronPrefab, GameObject ConnectionPrefab, int distanceBetweenLayers = 2, int verticalDistance = 2) {
 

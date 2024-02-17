@@ -44,6 +44,7 @@
      <Compile Include="Assets\Scripts\Controllers\GoalController.cs" />
      <Compile Include="Assets\Scripts\Controllers\PlayerController.cs" />
      <Compile Include="Assets\Scripts\NeuralNetwork\NeuralNetwork.cs" />
+     <None Include="Assets\NeuralNetwork.txt" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\2022.1.23f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
