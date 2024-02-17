@@ -10,6 +10,7 @@ public class Manager : MonoBehaviour
     public bool training = true;
 
     // Private variables, available in the inspector
+    [Header("Training settings")]
     [Range(0, 25)]
     [SerializeField] int numberOfEnemies = 10;
     [Range(1, 10)]
@@ -26,17 +27,36 @@ public class Manager : MonoBehaviour
     [SerializeField] float secondsPerGeneration = 15f;
     [Range(0f, 1f)]
     [SerializeField] float mutationValue = 0.1f;
-    // Visualization of the neural network
-    [SerializeField] bool drawNeuralNetwork = false;
 
 
     // Prefabs to be set in the inspector
+    [Header("Prefabs")]
     public GameObject enemyPrefab;
     public GameObject objectivePrefab;
     public GameObject playerPrefab;
     public GameObject wallPrefab;
+
+    // Neural Network settings
+    [Header("Neural Network - Shape settings")]
+    [Range(0, 9)]
+    [SerializeField] int nOfHiddenLayers = 2;
+    [Range(1, 10)]
+    [SerializeField] int nOfNeuronsPerLayer = 5;
+
+    // NN settings for debugging
+    [Header("Neural Network - Others")]
+    [Tooltip("If true, the neural network will be drawn")]
+    [SerializeField] bool drawNeuralNetwork = false;
+    [Tooltip("If true, the neural network will be saved")]
+    [SerializeField] bool saveNeuralNetwork = false;
+    [Tooltip("If true, the neural network will be loaded")]
+    [SerializeField] bool loadNeuralNetwork = false;
+    [Tooltip("File from a previous neural network to load")]
     public GameObject neuronPrefab;
     public GameObject synapsePrefab;
+    [Tooltip("Path to the file to load the neural network from")]
+    public string fileToLoad = "Assets/NeuralNetwork.txt";
+
 
     // List of players, enemies, walls, objectives, and nn
     List<GameObject> players = new List<GameObject>();
@@ -140,6 +160,12 @@ public class Manager : MonoBehaviour
             //print info generation
             generation++;
             Debug.Log("Generation: " + generation + ". Max Score: " + maxAwardedScore);
+
+            if (saveNeuralNetwork)
+            {
+                // It will be one of the best NN
+                neuralNetworks[0].SaveToFile("Assets/NeuralNetwork.txt");
+            }
         }
         if (drawNeuralNetwork)
         {
@@ -157,7 +183,7 @@ public class Manager : MonoBehaviour
         NeuralNetwork[] neuralNetworks = new NeuralNetwork[numberOfZonesPerSide * numberOfZonesPerSide];
         for (int i = 0; i < neuralNetworks.Length; i++)
         {
-            neuralNetworks[i] = new NeuralNetwork(neuronsOnFirstLayer,2,5,10, mutationValue);
+            neuralNetworks[i] = new NeuralNetwork(neuronsOnFirstLayer, 2, nOfHiddenLayers, nOfNeuronsPerLayer, mutationValue);
         }
 
         return neuralNetworks;
@@ -185,7 +211,7 @@ public class Manager : MonoBehaviour
         NeuralNetwork[] neuralNetworks = new NeuralNetwork[numberOfZonesPerSide * numberOfZonesPerSide];
         for (int i = 0; i < neuralNetworks.Length; i++)
         {
-            neuralNetworks[i] = new NeuralNetwork(neuronsOnFirstLayer,2,2,5,mutationValue);
+            neuralNetworks[i] = new NeuralNetwork(neuronsOnFirstLayer, 2, nOfHiddenLayers, nOfNeuronsPerLayer, mutationValue);
         }
 
         return neuralNetworks;
